@@ -1,0 +1,57 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+  read_timeout: 5s
+  write_timeout: 5s
+  idle_timeout: 60s
+  shutdown_timeout: 10s
+
+logging:
+  level: info
+  encoding: json
+
+team:
+  composition:
+    - tank
+    - fighter
+    - assassin
+    - mage
+    - marksman
+  allow_duplicates: false
+  heroes:
+    tank:
+      - Khufra
+      - Tigreal
+      - Atlas
+      - Lolita
+      - Grock
+    fighter:
+      - Chou
+      - Paquito
+      - Yu Zhong
+      - Guinevere
+      - Thamuz
+    assassin:
+      - Gusion
+      - Helcurt
+      - Lancelot
+      - Hayabusa
+      - Fanny
+    mage:
+      - Kagura
+      - Lunox
+      - Esmeralda
+      - Yve
+      - Pharsa
+    marksman:
+      - Beatrix
+      - Brody
+      - Claude
+      - Karrie
+      - Wanwan
+    support:
+      - Angela
+      - Estes
+      - Mathilda
+      - Floryn
+      - Rafaela

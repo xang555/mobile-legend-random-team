@@ -1,0 +1,57 @@
+basePath: /api/v1
+definitions:
+  handlers.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  random.Member:
+    properties:
+      hero:
+        type: string
+      role:
+        type: string
+    type: object
+  random.Team:
+    properties:
+      members:
+        items:
+          $ref: '#/definitions/random.Member'
+        type: array
+    type: object
+info:
+  contact: {}
+  description: API for generating random machine learning teams
+  title: Random ML Team API
+  version: "1.0"
+paths:
+  /healthz:
+    get:
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Health check
+      tags:
+      - health
+  /team/random:
+    get:
+      description: Returns a randomly generated team based on configuration
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/random.Team'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Generate random team
+      tags:
+      - team
+swagger: "2.0"

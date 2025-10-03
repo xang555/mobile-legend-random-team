@@ -1,0 +1,15 @@
+# Binaries
+bin/
+
+# Build output
+build/
+
+# Dependency directories
+vendor/
+
+# IDE files
+.idea/
+.vscode/
+
+# Logs
+*.log
