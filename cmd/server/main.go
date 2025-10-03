@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"go.uber.org/zap"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/laoitdev/random-ml-team/internal/app"
 	"github.com/laoitdev/random-ml-team/internal/config"
 	handlers "github.com/laoitdev/random-ml-team/internal/http/handlers"
+	healthhandlers "github.com/laoitdev/random-ml-team/internal/http/handlers/health"
 	"github.com/laoitdev/random-ml-team/internal/http/router"
 	"github.com/laoitdev/random-ml-team/internal/random"
 	"github.com/laoitdev/random-ml-team/pkg/logger"
@@ -50,13 +52,22 @@ func main() {
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
+	version := os.Getenv("APP_VERSION")
+	if version == "" {
+		version = "unknown"
+	}
+
+	metrics := healthhandlers.NewMetrics(time.Now())
+
 	generator, err := random.NewGenerator(cfg.Team.Composition, cfg.Team.AllowDuplicates, cfg.Team.Heroes)
 	if err != nil {
 		log.Fatal("invalid team configuration", zap.Error(err))
 	}
 
 	teamHandler := handlers.NewTeamHandler(generator, log)
-	httpRouter := router.New(log, teamHandler)
+	healthHandler := healthhandlers.NewHandler(cfg, generator, metrics, version)
+
+	httpRouter := router.New(log, metrics, teamHandler, healthHandler)
 
 	application := app.New(cfg, log, httpRouter)
 
