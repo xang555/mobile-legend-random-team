@@ -5,6 +5,42 @@ definitions:
       error:
         type: string
     type: object
+  health.Check:
+    properties:
+      details:
+        additionalProperties: true
+        type: object
+      error:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+  health.Metadata:
+    properties:
+      requestCount:
+        type: integer
+      startedAt:
+        type: string
+      uptime:
+        type: string
+    type: object
+  health.Response:
+    properties:
+      checks:
+        items:
+          $ref: '#/definitions/health.Check'
+        type: array
+      metadata:
+        $ref: '#/definitions/health.Metadata'
+      status:
+        type: string
+      timestamp:
+        type: string
+      version:
+        type: string
+    type: object
   random.Member:
     properties:
       hero:
@@ -25,6 +61,78 @@ info:
   title: Random ML Team API
   version: "1.0"
 paths:
+  /health:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.Response'
+        "429":
+          description: Too Many Requests
+          schema:
+            $ref: '#/definitions/health.Response'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/health.Response'
+      summary: Detailed health status
+      tags:
+      - health
+  /health/live:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.Response'
+      summary: Liveness probe
+      tags:
+      - health
+  /health/ready:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.Response'
+        "429":
+          description: Too Many Requests
+          schema:
+            $ref: '#/definitions/health.Response'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/health.Response'
+      summary: Readiness probe
+      tags:
+      - health
+  /health/status:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.Response'
+        "429":
+          description: Too Many Requests
+          schema:
+            $ref: '#/definitions/health.Response'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/health.Response'
+      summary: Detailed health status
+      tags:
+      - health
   /healthz:
     get:
       produces:
@@ -34,7 +142,7 @@ paths:
           description: ok
           schema:
             type: string
-      summary: Health check
+      summary: Legacy health probe
       tags:
       - health
   /team/random:
